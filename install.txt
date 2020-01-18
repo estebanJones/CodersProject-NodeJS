@@ -25,6 +25,8 @@ Les installations requisent (pour l'instant):
     - npm i cors
         -> evite lerreur cors
 
+    - npm i --save jsonwebtoken
+
     - Rajouter dans package.json 
         "scripts": {
             "test": "echo \"Error: no test specified\" && exit 1",

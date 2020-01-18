@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
     specialisation: { type: String, require: false },
     dateInscription: { type: Date, require: true },
     candidatId: { type: mongoose.Types.ObjectId, require: false},
-    teammate_id: { type: mongoose.type.ObjectId, require: false}
+    teammateId: { type: mongoose.Types.ObjectId, require: false}
 });
 
-exports.module = mongoose.Schema('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

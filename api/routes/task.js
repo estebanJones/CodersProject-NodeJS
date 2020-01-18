@@ -1,24 +1,24 @@
 const express = require("express");
 
-const router = express.router();
+const router = express.Router();
 const checkAuth = require("../middlewares/check-auth");
 const taskController = require("../controller/taskController");
 
 
 // Create task
-router.post("/user/create_task", checkAuth, taskController.createTask)
+router.post("/create_task", checkAuth, taskController.createTask)
 
 // Update task
-router.patch("/user/update_task", checkAuth, taskController.updateTask)
+router.patch("/update_task", checkAuth, taskController.updateTask)
 
 // Remove task
-router.delete("/user/delete_task", checkAuth, taskController.delete)
+router.delete("/delete_task", checkAuth, taskController.deleteTask)
 
 // SHOW ONE TASK
-router.post("/user/show_one_task", taskController.showOneTask)
+router.post("/show_one_task", taskController.showOneTask)
 
 // SHOW ALL TASKS
-router.post("/user/task/show/all", taskController.showAllTask)
+router.post("/task/show/all", taskController.showAllTasks)
 
 // ATTRIBUT TASK
 //router.post("/dev/attribut_task")

@@ -5,29 +5,39 @@ const JWT = require("jsonwebtoken");
 
 
 exports.newCandidat = (req, res, next) => {
-
+    return res.status(200).json({
+        state: "Le compte à bien été supprimé !"
+    })
 
 }
 
 exports.removeCandidat = (req, res, next) => {
-
+    return res.status(200).json({
+        state: "Le compte à bien été supprimé !"
+    })
 
 }
 
 exports.acceptCandidat = (req, res, next) => {
-
-
-
-}
-
-exports.showAll = (req, res, next) => {
-
+    return res.status(200).json({
+        state: "Le compte à bien été supprimé !"
+    })
 
 
 }
 
-exports.showOne = (req, res, next) => {
+exports.showAllCandidats = (req, res, next) => {
+    return res.status(200).json({
+        state: "Le compte à bien été supprimé !"
+    })
 
+
+}
+
+exports.showOneCandidat = (req, res, next) => {
+    return res.status(200).json({
+        state: "Le compte à bien été supprimé !"
+    })
 
     
 }

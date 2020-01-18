@@ -8,9 +8,9 @@ const projectSchema = mongoose.Schema({
     task_id: {type: mongoose.Types.ObjectId, require: false},
     candidat_id: {type: mongoose.Types.ObjectId, require: false},
     teammate_id: {type: mongoose.Types.ObjectId, require: false},
-    coders_join_confirmed: {type: mongoose.Types.ObjectId, require: false},
-    coders_com_post: {type: mongoose.Types.ObjectId, require: false},
-    coders_can_create_task: {type: mongoose.Types.ObjectId, require: false}
+    coders_join_confirmed: {type: Boolean, require: false},
+    coders_com_post: {type: Boolean, require: false},
+    coders_can_create_task: {type: Boolean, require: false}
 
 });
 
