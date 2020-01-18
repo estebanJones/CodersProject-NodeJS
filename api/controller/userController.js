@@ -3,6 +3,16 @@ const mongoose = require("mongoose");
 const User = require("../models/users");
 const JWT = require("jsonwebtoken");
 
+const MongoClient = require('mongodb').MongoClient;
+const url = "mongodb://localhost:8000/";
+
+
+function error500(args) {
+    return res.status(500).json({
+        state: "Une érreur est survenue :" + args
+    })
+}
+
 // login
 exports.login = (req, res, next) => {
     User.findOne({username: req.body.username})
@@ -14,9 +24,7 @@ exports.login = (req, res, next) => {
             }
             return bcrypt.compare(req.body.password, user.password, (err, isValid) => {
                 if (err) {
-                    return res.status(500).json({
-                        state: err
-                    })
+                    error500(err)
                 }
                 if (isValid) {
                     return res.status(200).json({
@@ -58,20 +66,21 @@ exports.createUser = (req, res, next) => {
             if (user) {
                 return res.status(200).json({
                     state: "Le pseudo est déjà utilisé"
-                })
+                });
             }
             // JE RETOURNE LE HASH DANS LA PROMESSE
-            return bcrypt.hash(req.body.password, 10);
+            return bcrypt.hash(() => {
+                req.body.password, 10});
         })
         .then(hash => {
             const user = new User({
-                _id: mongoose.Schema.Types.ObjectId,
+                _id: mongoose.Types.ObjectId(),
                 username: req.body.username,
                 email: req.body.email,
                 roles: req.body.role,
                 password: hash,
                 specialisation: req.body.specialisation,
-                dateInscription: req.body.dateInscription,
+                dateInscription: Date.now(),
                 candidatId: req.body.candidatId,
                 teammateId: req.body.teammateId
             })
@@ -82,9 +91,7 @@ exports.createUser = (req, res, next) => {
             })
         })
         .catch(err => {
-            return res.status(500).json({
-                state: "Une erreur est survenu : " + err
-            })
+            error500(err);
         })
 }
 
@@ -117,10 +124,12 @@ exports.deleteUser = (req, res, next) => {
 }
 
 exports.showOneUser = (req, res, next) => {
+    // JE CHERCHE LE USER PAR RAPPORT A L ID
     User.findOne({_id: req.body.userId})
-        .then(data => {
+        // JE LUI RENVOIE LE USER
+        .then(user => {
             res.status(200).json({
-               message: data
+               object: user
             })
         })
         .catch(err => {
@@ -129,8 +138,17 @@ exports.showOneUser = (req, res, next) => {
 }
 
 exports.showAllUsers = (req, res, next) => {
-    return res.status(200).json({
-        state: "Le compte à bien été supprimé !"
-    })
-
+    // JE ME CONNECTE A MONGO
+    MongoClient.connect(url, function(err, db) {
+        // SI ERREUR RENVOYER
+        if (err) throw err;
+        // SINON CONNEXION
+        var dbo = db.db("codersproject");
+        // FOUILLE DANS LA TABLE USER ET FETCH MOI LA TOTALITE
+        dbo.collection("User").find({}).toArray(function(err, result) {
+          if (err) throw err;
+          console.log(result);
+          db.close();
+        });
+      });
 }
