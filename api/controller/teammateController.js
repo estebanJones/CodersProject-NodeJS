@@ -5,7 +5,7 @@ const JWT = require("jsonwebtoken");
 
 // SHOW MANAGER
 exports.showTeammate = (req, res, next) => {
-    Teammate.findOne({ user_id: req.body.userId })
+    Teammate.findOne({ user_id: req.params.userId })
         .then(teammate => {
             return res.status(200).json({
                 object: teammate
@@ -50,7 +50,7 @@ exports.switchRoleTeammate = (req, res, next) => {
 
 // REMOVE TEAMMATE
 exports.removeTeammate = (req, res, next) => {
-   Teammate.remove({user_id: req.body.userId})
+   Teammate.remove({user_id: req.params.userId})
     .then(result => {
         state: "Teammate supprimé avec succès"
     })

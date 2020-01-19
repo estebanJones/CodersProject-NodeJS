@@ -117,7 +117,7 @@ exports.updateUser = (req, res, next) => {
 }
 
 exports.deleteUser = (req, res, next) => {
-    User.remove({ _id: req.body.userId })
+    User.remove({ _id: req.params.userId })
         .then(data => {
             return res.status(200).json({
                 state: "Le compte à bien été supprimé !"
@@ -130,7 +130,7 @@ exports.deleteUser = (req, res, next) => {
 
 exports.showOneUser = (req, res, next) => {
     // JE CHERCHE LE USER PAR RAPPORT A L ID
-    User.findOne({ _id: req.body.userId })
+    User.findOne({ _id: req.params.userId })
         // JE LUI RENVOIE LE USER
         .then(user => {
             res.status(200).json({

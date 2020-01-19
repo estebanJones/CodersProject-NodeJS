@@ -40,7 +40,7 @@ exports.updateProject = (req, res, next) => {
 }
 
 exports.deleteProject = (req, res, next) => {
-    Project.remove({ _id: req.body.projectId })
+    Project.remove({ _id: req.params.projectId })
         .then(result => {
             return res.status(200).json({
                 state: "Projet supprimé avec succès"
@@ -54,7 +54,7 @@ exports.deleteProject = (req, res, next) => {
 
 exports.showOneProject = (req, res, next) => {
     // JE CHERCHE LE USER PAR RAPPORT A L ID
-    Project.findOne({ _id: req.body.projectId })
+    Project.findOne({ _id: req.params.projectId })
         // JE LUI RENVOIE LE USER
         .then(project => {
             res.status(200).json({
