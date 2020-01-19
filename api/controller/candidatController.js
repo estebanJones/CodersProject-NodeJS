@@ -8,20 +8,13 @@ const Candidat = require("../models/candidat");
 const Teammate = require("../models/teammate");
 
 
-function error500(args) {
-    return res.status(500).json({
-        state: "Une érreur est survenue :" + args
-    })
-}
-
-
 exports.newCandidat = (req, res, next) => {
     // JE RECUPERE L ID USER
     User.findOne({ _id: req.body.userId })
     // CANDIDAT TROUVE
         .then(candidat => {
             // JE RECUPERE L ID PROJET
-            Project.findOne({_id: req.body.projectId})
+            Project.find({_id: req.body.projectId})
                 .then(projet => {
                     // SI LE CANDIDAT EXISTE DEJA DANS LE PROJET
                     if(projet.user_id === candidat.id) {
@@ -35,7 +28,9 @@ exports.newCandidat = (req, res, next) => {
                         user_id: candidat.id,
                         project_id: projet.id,
                         message: req.body.message
-                    })
+                    });
+
+                    return candidat.save();
                 })
                 .then(success => {
                     return res.status(200).json({
@@ -56,7 +51,9 @@ exports.removeCandidat = (req, res, next) => {
             })
         })
         .catch(err => {
-            error500(err)
+            return res.status(500).json({
+                state: "Une érreur est survenue :" + err
+            })
         })
     
 
@@ -73,7 +70,9 @@ exports.acceptCandidat = (req, res, next) => {
                         _id: mongoose.Types.ObjectId(),
                         user_id: req.body.userId,
                         project_id: projet.id
-                    })
+                    });
+
+                    return teammate.save();
                 })
                 .then(success => {
                     return res.status(200).json({
@@ -81,7 +80,9 @@ exports.acceptCandidat = (req, res, next) => {
                     })
                 })
                 .catch(err => {
-                    error500(err)
+                    return res.status(500).json({
+                        state: "Une érreur est survenue :" + err
+                    })
                 })
         })
 }
@@ -100,7 +101,9 @@ exports.showAllCandidats = (req, res, next) => {
             })
         })
         .catch(err => {
-            error500(err)
+            return res.status(500).json({
+                state: "Une érreur est survenue :" + err
+            })
         })
 }
 
@@ -112,8 +115,8 @@ exports.showOneCandidat = (req, res, next) => {
             })
         })
         .catch(err => {
-            error500(err)
+            return res.status(500).json({
+                state: "Une érreur est survenue :" + err
+            })
         })
-
-    
 }

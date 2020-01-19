@@ -7,11 +7,11 @@ const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://localhost:8000/";
 
 
-function error500(args) {
-    return res.status(500).json({
-        state: "Une érreur est survenue :" + args
-    })
-}
+// function error500(response, args) {
+//     return response.status(500).json({
+//         state: "Une érreur est survenue :" + args
+//     })
+// }
 
 // login
 exports.login = (req, res, next) => {
@@ -20,11 +20,13 @@ exports.login = (req, res, next) => {
             if (!user) {
                 return res.status(403).json({
                     state: "Identifiant incorrect"
-                })
+                });
             }
             return bcrypt.compare(req.body.password, user.password, (err, isValid) => {
                 if (err) {
-                    error500(err)
+                    return res.status(500).json({
+                        state: "Une erreur est survenue :" + err
+                    });
                 }
                 if (isValid) {
                     return res.status(200).json({
@@ -44,7 +46,7 @@ exports.login = (req, res, next) => {
                 } else {
                     return res.status(403).json({
                         state: "Password incorrect"
-                    })
+                    });
                 }
             });
         });
@@ -54,9 +56,7 @@ exports.login = (req, res, next) => {
 exports.logout = (req, res, next) => {
     return res.status(200).json({
         state: "Le compte à bien été supprimé !"
-    })
-    // findOne({ _id: req.body.userId })
-    //     .then()
+    });
 }
 
 // INSCRIPTION
@@ -64,7 +64,7 @@ exports.createUser = (req, res, next) => {
     User.findOne({username: req.body.username})
         .then(user => {
             if (user) {
-                return res.status(200).json({
+                return res.status(409).json({
                     state: "Le pseudo est déjà utilisé"
                 });
             }
@@ -83,15 +83,26 @@ exports.createUser = (req, res, next) => {
                 dateInscription: Date.now(),
                 candidatId: req.body.candidatId,
                 teammateId: req.body.teammateId
-            })
-        })
-        .then(result => {
-            return res.status(200).json({
-                state: "Inscription réussi !"
-            })
+            });
+
+            return user.save((err, isValid) => {
+                if (err) {
+                    return res.status(500).json({
+                        error: err
+                    });
+                }
+                if (isValid) {
+                    return res.status(200).json({
+                        state: "Inscription réussi !"
+                    });
+                }
+
+            });
         })
         .catch(err => {
-            error500(err);
+            return res.status(500).json({
+                state: "Une erreur est survenue :" + err
+            });
         })
 }
 
@@ -125,7 +136,7 @@ exports.deleteUser = (req, res, next) => {
 
 exports.showOneUser = (req, res, next) => {
     // JE CHERCHE LE USER PAR RAPPORT A L ID
-    User.findOne({_id: req.body.userId})
+    User.findOne({ _id: req.body.userId })
         // JE LUI RENVOIE LE USER
         .then(user => {
             res.status(200).json({
@@ -133,21 +144,32 @@ exports.showOneUser = (req, res, next) => {
             })
         })
         .catch(err => {
-            state: err
+            return res.status(500).json({
+                state: "Une erreur est survenue :" + err
+            })
         })
 }
 
 exports.showAllUsers = (req, res, next) => {
-    // JE ME CONNECTE A MONGO
+    return res.status(200).json({
+        state: "yooo"
+    })
+    // JE ME CONNECTE A MA BDD MONGO
     MongoClient.connect(url, function(err, db) {
         // SI ERREUR RENVOYER
-        if (err) throw err;
+        if (err) {
+            return res.status(500).json({
+                state: "Une erreur est survenue :" + err
+            })
+        }
         // SINON CONNEXION
         var dbo = db.db("codersproject");
         // FOUILLE DANS LA TABLE USER ET FETCH MOI LA TOTALITE
-        dbo.collection("User").find({}).toArray(function(err, result) {
-          if (err) throw err;
-          console.log(result);
+        dbo.collection("User").find({}).toArray(function(err, listeUsers) {
+ 
+        res.status(200).json({
+            object: listeUsers
+         })
           db.close();
         });
       });

@@ -4,12 +4,6 @@ const Project = require("../models/project");
 const JWT = require("jsonwebtoken");
 
 
-function error500(args) {
-    return res.status(500).json({
-        state: "Une érreur est survenue :" + args
-    })
-}
-
 
 exports.createProject = (req, res, next) => {
     return res.status(200).json({
