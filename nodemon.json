@@ -1,6 +1,6 @@
 {
     "env": {
-        "MONGOO_ATLAS_PW": "coders",
+        "MONGO_ATLAS_PW": "coders",
         "JWT_KEY": "testToken"
     }
 }

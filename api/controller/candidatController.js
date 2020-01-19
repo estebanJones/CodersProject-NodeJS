@@ -21,25 +21,20 @@ exports.newCandidat = (req, res, next) => {
             // JE RECUPERE L ID PROJET
             Project.findOne({_id: req.body.projectId})
                 .then(projet => {
-                    // SI LE CANDIDAT EXISTE DEJA DANS LE PROJET
-                    if(projet.user_id === candidat.id) {
-                        return res.status(200).json({
-                            state: "Vous avez déjà candidaté"
-                        })
-                    }
+                    console.log(projet._id)
+
                     // SI NON JE CREER UN CANDIDAT
-                    const candidat = new Candidat({
+                    const newCandidat = new Candidat({
                         _id: mongoose.Types.ObjectId(),
+                        name: candidat.username,
                         user_id: candidat._id,
                         project_id: projet._id,
                         message: req.body.message
                     });
 
-                    return candidat.save((err, isValid) => {
+                    return newCandidat.save((err, isValid) => {
                         if(err) {
-                            return res.status(500).json({
-                                state: "Une erreur est survenue: " + err
-                            })
+                            error500(res, err);
                         }
                         if (isValid) {
                             return res.status(200).json({
@@ -49,10 +44,11 @@ exports.newCandidat = (req, res, next) => {
                     });
                 })
                 .catch(err => {
-                    return res.status(500).json({
-                        state: "Une erreur est survenue :" + err
-                    })
+                   error500(res, err);
                 })
+        })
+        .catch(err => {
+            error500(res, err);
         })
 }
 
@@ -60,13 +56,11 @@ exports.removeCandidat = (req, res, next) => {
     Candidat.remove({user_id: req.body.userId})
         .then(sucess => {
             return res.status(200).json({
-                state: "Le compte à bien été supprimé !"
+                state: "Le candidat à bien été supprimé !"
             })
         })
         .catch(err => {
-            return res.status(500).json({
-                state: "Une érreur est survenue :" + err
-            })
+            error500(res, err);
         })
     
 
@@ -77,7 +71,7 @@ exports.acceptCandidat = (req, res, next) => {
     Candidat.findOne({user_id: req.body.userId})
         .then(candidat => {
             // JE RECUPERE LE PROJET ID
-            Projet.findOne({_id: req.body.projectId})
+            Project.findOne({_id: req.body.projectId})
                 .then(projet => {
                     const teammate = new Teammate({
                         _id: mongoose.Types.ObjectId(),
@@ -85,26 +79,38 @@ exports.acceptCandidat = (req, res, next) => {
                         project_id: projet.id
                     });
 
-                    return teammate.save();
-                })
-                .then(success => {
-                    return res.status(200).json({
-                        state: "Le candidat à bien été accepté"
-                    })
+                    return teammate.save((err, isValid) => {
+                        if (err) {
+                            error500(res, err);
+                        }
+                        if (isValid) {
+                            Candidat.remove({user_id: req.body.userId})
+                                .then(result => {
+                                    return res.status(200).json({
+                                        state: "Candidat accepté !"
+                                    });
+                                })
+                                .catch(err => {
+                                    error500(res, err);
+                                })
+                        }
+                    });
                 })
                 .catch(err => {
-                    return res.status(500).json({
-                        state: "Une érreur est survenue :" + err
-                    })
+                    error500(res, err);
                 })
+        .catch(err => {
+            error500(res, err);
         })
+    })
 }
 
 exports.showAllCandidats = (req, res, next) => {
-    Candidat.find({project_id: req.body.idProject})
+    Candidat.find({project_id: req.body.projectId})
         .then(candidats => {
+            console.log(candidats.length);
             if (candidats.length <= 0) {
-                return res.status(200).json({
+                return res.status(405).json({
                     state: "Vous n'avez aucun candidat"
                 })
             }
@@ -114,9 +120,7 @@ exports.showAllCandidats = (req, res, next) => {
             })
         })
         .catch(err => {
-            return res.status(500).json({
-                state: "Une érreur est survenue :" + err
-            })
+            error500(res, err);
         })
 }
 
@@ -128,8 +132,6 @@ exports.showOneCandidat = (req, res, next) => {
             })
         })
         .catch(err => {
-            return res.status(500).json({
-                state: "Une érreur est survenue :" + err
-            })
+            error500(res, err);
         })
 }

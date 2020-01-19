@@ -9,7 +9,7 @@ const candidatController = require("../controller/candidatController");
 router.post("/new", candidatController.newCandidat)
 
 // Remove project
-router.delete("/remove", candidatController.removeCandidat)
+router.post("/remove", candidatController.removeCandidat)
 
 // Accept candidat
 router.post("/accept", candidatController.acceptCandidat)
