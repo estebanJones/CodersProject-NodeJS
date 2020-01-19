@@ -7,6 +7,11 @@ const Project = require("../models/project");
 const Candidat = require("../models/candidat");
 const Teammate = require("../models/teammate");
 
+function error500(resp, args) {
+    return resp.status(500).json({
+        state: "Une erreur est survenue :" + args
+    })
+}
 
 exports.newCandidat = (req, res, next) => {
     // JE RECUPERE L ID USER
@@ -14,7 +19,7 @@ exports.newCandidat = (req, res, next) => {
     // CANDIDAT TROUVE
         .then(candidat => {
             // JE RECUPERE L ID PROJET
-            Project.find({_id: req.body.projectId})
+            Project.findOne({_id: req.body.projectId})
                 .then(projet => {
                     // SI LE CANDIDAT EXISTE DEJA DANS LE PROJET
                     if(projet.user_id === candidat.id) {
@@ -25,20 +30,28 @@ exports.newCandidat = (req, res, next) => {
                     // SI NON JE CREER UN CANDIDAT
                     const candidat = new Candidat({
                         _id: mongoose.Types.ObjectId(),
-                        user_id: candidat.id,
-                        project_id: projet.id,
+                        user_id: candidat._id,
+                        project_id: projet._id,
                         message: req.body.message
                     });
 
-                    return candidat.save();
-                })
-                .then(success => {
-                    return res.status(200).json({
-                        state: "Vous avez candidaté avec succès"
-                    })
+                    return candidat.save((err, isValid) => {
+                        if(err) {
+                            return res.status(500).json({
+                                state: "Une erreur est survenue: " + err
+                            })
+                        }
+                        if (isValid) {
+                            return res.status(200).json({
+                                state: "Vous avez candidaté avec succès"
+                            })
+                        }
+                    });
                 })
                 .catch(err => {
-                    error500(err)
+                    return res.status(500).json({
+                        state: "Une erreur est survenue :" + err
+                    })
                 })
         })
 }

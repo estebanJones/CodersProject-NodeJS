@@ -6,18 +6,18 @@ const candidatController = require("../controller/candidatController");
 
 
 // add new candidat
-router.post("/new", checkAuth, candidatController.newCandidat)
+router.post("/new", candidatController.newCandidat)
 
 // Remove project
-router.delete("/remove", checkAuth, candidatController.removeCandidat)
+router.delete("/remove", candidatController.removeCandidat)
 
 // Accept candidat
-router.post("/accept", checkAuth, candidatController.acceptCandidat)
+router.post("/accept", candidatController.acceptCandidat)
 
 // SHOW ALL CANDIDAT
-router.post("/show/all", checkAuth, candidatController.showAllCandidats)
+router.post("/show/all", candidatController.showAllCandidats)
 
 // SHOW ONE
-router.post("/show/one", checkAuth, candidatController.showOneCandidat)
+router.post("/show/one", candidatController.showOneCandidat)
 
 module.exports = router;

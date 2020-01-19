@@ -8,22 +8,22 @@ const usersController = require("../controller/userController");
 router.post("/login", usersController.login)
 
 // LOGOUT
-router.post("/logout", checkAuth, usersController.logout)
+router.post("/logout", usersController.logout)
 
 // Create user
 router.post("/newUser", usersController.createUser)
 
 // Update user
-router.patch("/edit/profile", checkAuth, usersController.updateUser)
+router.post("/update", usersController.updateUser)
 
 // Remove user
-router.delete("/delete", checkAuth, usersController.deleteUser)
+router.post("/delete", usersController.deleteUser)
 
 // SHOW ONE
-router.post("/show/one", checkAuth, usersController.showOneUser)
+router.post("/show/one", usersController.showOneUser)
 
 // SHOW ALL
-router.post("/show/all", checkAuth, usersController.showAllUsers)
+router.post("/show/all", usersController.showAllUsers)
 
 
 module.exports = router;

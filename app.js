@@ -6,7 +6,6 @@ const app = express();
 const mongoose = require("mongoose");
 // J'IMPORTE CORS
 const cors = require("cors");
-
 // JE ME CONNECT A LA DATABASE
 mongoose.connect("mongodb+srv://admin:" + process.env.MONGO_ATLAS_PW + "@codersproject-hkv6f.gcp.mongodb.net/test?retryWrites=true&w=majority",
 {

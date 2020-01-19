@@ -7,11 +7,11 @@ const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://localhost:8000/";
 
 
-// function error500(response, args) {
-//     return response.status(500).json({
-//         state: "Une érreur est survenue :" + args
-//     })
-// }
+function error500(resp, args) {
+    return resp.status(500).json({
+        state: "Une erreur est survenue :" + args
+    })
+}
 
 // login
 exports.login = (req, res, next) => {
@@ -36,7 +36,7 @@ exports.login = (req, res, next) => {
                                 userId: req.body._id,
                                 mail: user.mail
                             },
-                            process_env_JTW_KEY,
+                            process.env.JWT_KEY,
                             {
                                 expiresIn: "10h"
                             }
@@ -69,8 +69,7 @@ exports.createUser = (req, res, next) => {
                 });
             }
             // JE RETOURNE LE HASH DANS LA PROMESSE
-            return bcrypt.hash(() => {
-                req.body.password, 10});
+            return bcrypt.hash(req.body.password, 10);
         })
         .then(hash => {
             const user = new User({
@@ -87,9 +86,7 @@ exports.createUser = (req, res, next) => {
 
             return user.save((err, isValid) => {
                 if (err) {
-                    return res.status(500).json({
-                        error: err
-                    });
+                    error500(res, err);
                 }
                 if (isValid) {
                     return res.status(200).json({
@@ -100,26 +97,23 @@ exports.createUser = (req, res, next) => {
             });
         })
         .catch(err => {
-            return res.status(500).json({
-                state: "Une erreur est survenue :" + err
-            });
+            error500(res, err);
         })
 }
 
 exports.updateUser = (req, res, next) => {
-    const updateOption = {};
-    for (const option of req.body) {
-        updateOption[option] = option.value
-    }
-    User.patch({_id: req.body.userId}, {$set: updateOption})
-    .then(result => {
-        return res.status(200).json({
-            state: "Mise à jour réuissi"
-        })
-    })
-    .catch(err => {
-        state: err
-    })
+    // const updateOption = {}; 
+
+    // for (const params of )
+    // User.patch({_id: req.body.userId}, {$set: updateOption})
+    // .then(result => {
+    //     return res.status(200).json({
+    //         state: "Mise à jour réussi"
+    //     })
+    // })
+    // .catch(err => {
+    //     error500(res, err);
+    // })
 }
 
 exports.deleteUser = (req, res, next) => {
@@ -130,7 +124,7 @@ exports.deleteUser = (req, res, next) => {
             })
         })
         .catch(err => {
-            state: "Une erreur est survenue " + err
+            error500(res, err);
         })
 }
 
@@ -144,33 +138,19 @@ exports.showOneUser = (req, res, next) => {
             })
         })
         .catch(err => {
-            return res.status(500).json({
-                state: "Une erreur est survenue :" + err
-            })
+            error500(res, err);
         })
 }
 
 exports.showAllUsers = (req, res, next) => {
-    return res.status(200).json({
-        state: "yooo"
-    })
-    // JE ME CONNECTE A MA BDD MONGO
-    MongoClient.connect(url, function(err, db) {
-        // SI ERREUR RENVOYER
-        if (err) {
-            return res.status(500).json({
-                state: "Une erreur est survenue :" + err
-            })
-        }
-        // SINON CONNEXION
-        var dbo = db.db("codersproject");
-        // FOUILLE DANS LA TABLE USER ET FETCH MOI LA TOTALITE
-        dbo.collection("User").find({}).toArray(function(err, listeUsers) {
- 
-        res.status(200).json({
-            object: listeUsers
-         })
-          db.close();
-        });
-      });
+    User.find()
+        .select("username roles specialisation")
+        .then(users => {
+            return res.status(200).json({
+                users: users
+            });
+        })
+        .catch(err => {
+            error500(res, err);
+        })
 }
