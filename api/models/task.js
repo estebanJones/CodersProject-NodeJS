@@ -10,4 +10,4 @@ const taskSchema = mongoose.Schema({
     teammate_id: { type: mongoose.Types.ObjectId, require: false}
 });
 
-exports.module = mongoose.Schema("Task", taskSchema);
+module.exports = mongoose.model("Task", taskSchema);

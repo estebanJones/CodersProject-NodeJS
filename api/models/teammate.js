@@ -6,7 +6,7 @@ const teammateSchema = mongoose.Schema({
     user_id: {type: mongoose.Types.ObjectId, require: true},
     project_id: { type: mongoose.Types.ObjectId, require: true},
     task_id: { type: mongoose.Types.ObjectId, require: false},
-    role: { type: mongoose.Types.ObjectId, require: false}
+    role: { type: String, require: false}
 });
 
-exports.module = mongoose.Schema("Teammate", teammateSchema);
+module.exports = mongoose.model("Teammate", teammateSchema);

@@ -1,29 +1,32 @@
 const express = require("express");
 
-const router = express.router();
+const router = express.Router();
 const checkAuth = require("../middlewares/check-auth");
 const usersController = require("../controller/userController");
 
 // login
-router.post("/login")
+router.post("/login", usersController.login)
 
 // LOGOUT
-router.post("/logout")
+router.post("/logout", usersController.logout)
 
 // Create user
-router.post("/api/user/new")
+router.post("/newUser", usersController.createUser)
 
 // Update user
-router.patch("/api/user/edit/profile", checkAuth)
+router.patch("/update", usersController.updateUser)
 
 // Remove user
-router.delete("/api/user/delete", checkAuth)
+router.post("/delete", usersController.deleteUser)
 
 // SHOW ONE
-router.post("api/user/show/one")
+router.post("/show/one", usersController.showOneUser)
 
 // SHOW ALL
-router.post("api/user/show/all", usersController.showAll)
+router.post("/show/all", usersController.showAllUsers)
+
+// checkUser
+router.post("/checkToken", usersController.checkAuthUser)
 
 
 module.exports = router;

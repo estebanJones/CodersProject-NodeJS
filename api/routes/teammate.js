@@ -1,21 +1,21 @@
 const express = require("express");
 
-const router = express.router();
+const router = express.Router();
 const checkAuth = require("../middlewares/check-auth");
 const teammateController = require("../controller/teammateController");
 
 
 // SHOW MANAGER 
-router.post("/teammate/project/show/manager", checkAuth, teammateController.showManager)
+router.post("/project/show/manager", checkAuth, teammateController.showTeammate)
 
 // SWITCH ROLE
-router.post("/teammate/project/switch/roles", checkAuth, teammateController.switchRole)
+router.post("/project/switch/roles", checkAuth, teammateController.switchRoleTeammate)
 
 // Remove user
-router.delete("/teammate/project/delete", checkAuth, teammateController.remove)
+router.delete("/project/delete", checkAuth, teammateController.removeTeammate)
 
 // SHOW ALL
-router.post("/teammate/project/show/all", teammateController.showAll)
+router.post("/project/show/all", teammateController.showAllTeammate)
 
 
 module.exports = router;
