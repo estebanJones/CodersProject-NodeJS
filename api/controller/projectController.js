@@ -12,7 +12,7 @@ function error500(resp, args) {
 
 exports.createProject = (req, res, next) => {
     const project = new Project({
-        _id: new mongoose.Types.ObjectId(),
+        _id: mongoose.Types.ObjectId(),
         title: req.body.title,
         description: req.body.description,
         coders_join_confirmed: req.body.coders_join_confirmed,
@@ -29,13 +29,13 @@ exports.createProject = (req, res, next) => {
                 state: "Projet créé avec succès !"
             })
         }
-    })
+    });
 }
 
 exports.updateProject = (req, res, next) => {
     return res.status(200).json({
         state: "Le compte à bien été supprimé !"
-    })
+    });
 
 }
 
@@ -44,7 +44,7 @@ exports.deleteProject = (req, res, next) => {
         .then(result => {
             return res.status(200).json({
                 state: "Projet supprimé avec succès"
-            })
+            });
         })
         .catch(err => {
             error500(res, err)

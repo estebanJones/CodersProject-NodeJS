@@ -12,6 +12,7 @@ function error500(resp, args) {
 
 exports.createTask = (req, res, next) => {
     const task = new Task({
+        _id: mongoose.Types.ObjectId(),
         title: req.body.title,
         content: req.body.content,
         task_importance: req.body.taskImportance,

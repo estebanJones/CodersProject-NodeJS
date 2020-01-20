@@ -112,12 +112,12 @@ exports.showAllCandidats = (req, res, next) => {
             if (candidats.length <= 0) {
                 return res.status(405).json({
                     state: "Vous n'avez aucun candidat"
-                })
+                });
             }
 
             return res.status(200).json({
                 listCandidats: candidats
-            })
+            });
         })
         .catch(err => {
             error500(res, err);
@@ -129,7 +129,7 @@ exports.showOneCandidat = (req, res, next) => {
         .then(candidat => {
             return res.status(200).json({
                 candidat: candidat
-            })
+            });
         })
         .catch(err => {
             error500(res, err);
