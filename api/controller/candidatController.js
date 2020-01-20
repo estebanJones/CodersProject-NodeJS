@@ -5,7 +5,7 @@ const JWT = require("jsonwebtoken");
 
 
 exports.newCandidat = (req, res, next) => {
-
+    
 
 }
 
@@ -31,3 +31,4 @@ exports.showOne = (req, res, next) => {
 
     
 }
+

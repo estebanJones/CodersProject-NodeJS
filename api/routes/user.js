@@ -23,7 +23,7 @@ router.delete("/api/user/delete", checkAuth)
 router.post("api/user/show/one")
 
 // SHOW ALL
-router.post("api/user/show/all")
+router.post("api/user/show/all", usersController.showAll)
 
 
 module.exports = router;
