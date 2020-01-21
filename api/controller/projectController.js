@@ -1,24 +1,22 @@
-const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const Project = require("../models/project");
-const JWT = require("jsonwebtoken");
-const Teammate = require("../controller/teammateController");
 
 
-// function error500(resp, args) {
-//     return resp.status(500).json({
-//         state: "Une erreur est survenue :" + args
-//     })
-// }
+
+function error500(resp, args) {
+    return resp.status(500).json({
+        state: "Une erreur est survenue :" + args
+    })
+}
 
 exports.createProject = (req, res, next) => {
     const project = new Project({
         _id: mongoose.Types.ObjectId(),
         title: req.body.title,
         description: req.body.description,
-        coders_join_confirmed: req.body.coders_join_confirmed,
-        coders_com_post: req.body.coders_com_post,
-        coders_can_create_task: req.body.coders_can_create_task
+        coders_join_confirmed: false,
+        coders_com_post: false,
+        coders_can_create_task: false
     });
 
     // User.findOne({ _id: req.body.id })
@@ -45,25 +43,10 @@ exports.createProject = (req, res, next) => {
 }
 
 exports.updateProject = (req, res, next) => {
+    return res.status(200).json({
+        state: "Projet créé avec succès !"
+    });
 
-    const ops = {};
-
-    for (const op of req.body) {
-        ops[op.propName] = op.value;
-        console.log(ops[op.propName]);
-    }
-
-    Project.post({ _id: req.params.projectId }, { $set: ops })
-        .then(result => {
-            return res.status(200).json({
-                state: "Projet mis à jour"
-            });
-        })
-        .then(err => {
-            return res.status(500).json({
-                state: err
-            });
-        });
 }
 
 
@@ -82,11 +65,13 @@ exports.deleteProject = (req, res, next) => {
 
 exports.showOneProject = (req, res, next) => {
     // JE CHERCHE LE USER PAR RAPPORT A L ID
-    Project.findOne({ _id: req.params.projectId })
+    Project.findOne({ _id: req.body.projectId })
         // JE LUI RENVOIE LE USER
         .then(project => {
+            console.log(project);
             res.status(200).json({
-                project: project
+                project: project,
+
             })
         })
         .catch(err => {

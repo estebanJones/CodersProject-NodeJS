@@ -25,8 +25,6 @@ router.post("/show/one", usersController.showOneUser)
 // SHOW ALL
 router.post("/show/all", usersController.showAllUsers)
 
-// checkUser
-router.post("/checkToken", usersController.checkAuthUser)
 
 
 module.exports = router;

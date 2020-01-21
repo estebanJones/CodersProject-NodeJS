@@ -18,6 +18,6 @@ router.delete("/delete_project", projectController.deleteProject)
 router.post("/show_one_project", projectController.showOneProject)
 
 // SHOW ALL PROJECT
-router.post("/show_all_project", projectController.showAllProject)
+router.get("/show_all_project", projectController.showAllProject)
 
 module.exports = router;
