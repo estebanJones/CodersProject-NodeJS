@@ -21,14 +21,14 @@ exports.createProject = (req, res, next) => {
         coders_can_create_task: false
     });
 
-    // User.findOne({ _id: req.body.id })
-    // const teammate = new Teammate({
-    //     _id: mongoose.Schema.Types.ObjectId,
-    //     user_id: { type: mongoose.Types.ObjectId, require: true },
-    //     project_id: { type: mongoose.Types.ObjectId, require: true },
-    //     task_id: { type: mongoose.Types.ObjectId, require: false },
-    //     role: { type: String, require: false }
-    // })
+    //User.findOne({ _id: req.body.id })
+    const teammate = new Teammate({
+        _id: mongoose.Types.ObjectId(),
+        user_id: req.body.user_id,
+        project_id: project._id,
+        task_id: { type: mongoose.Types.ObjectId, require: false },
+        role: "manager"
+    })
 
     return project.save((err, isValid) => {
         if (err) {
