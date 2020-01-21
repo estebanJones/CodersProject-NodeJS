@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const Project = require("../models/project");
 const JWT = require("jsonwebtoken");
-const Teammate = require("../controller/teammateController");
+const Teammate = require("../models/teammate");
 
 
 // function error500(resp, args) {
@@ -21,14 +21,12 @@ exports.createProject = (req, res, next) => {
         coders_can_create_task: false
     });
 
-    //User.findOne({ _id: req.body.id })
     const teammate = new Teammate({
         _id: mongoose.Types.ObjectId(),
         user_id: req.body.user_id,
         project_id: project._id,
-        task_id: { type: mongoose.Types.ObjectId, require: false },
         role: "manager"
-    })
+    });
 
     return project.save((err, isValid) => {
         if (err) {
@@ -37,12 +35,22 @@ exports.createProject = (req, res, next) => {
             });
         }
         if (isValid) {
-            return res.status(200).json({
+            return teammate.save((err, isValid) => {
+                if (err) {
+                    return res.status(500).json({
+                        state: "erreur"
+                    });
+                }
+                if (isValid) {
+                    res.status(200).json({
                 state: "Projet créé avec succès !"
-            });
+                })
+
+            };
         }
-    });
+    );
 }
+    })}
 
 exports.updateProject = (req, res, next) => {
     Project.patch({ _id: req.params.projectId })

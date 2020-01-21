@@ -33,6 +33,7 @@ exports.login = (req, res, next) => {
                 if (isValid) {
                     return res.status(200).json({
                         state: "Connexion successfull",
+                        user: user,
                         token: JWT.sign(
                             {
                                 userId: user._id,
