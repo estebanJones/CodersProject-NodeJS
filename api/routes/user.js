@@ -23,7 +23,7 @@ router.post("/delete", usersController.deleteUser)
 router.post("/show/one", usersController.showOneUser)
 
 // SHOW ALL
-router.get("/show/all", usersController.showAllUsers)
+router.post("/show_all", usersController.showAllUsers)
 
 // checkUser
 router.post("/checkToken", usersController.checkAuthUser)

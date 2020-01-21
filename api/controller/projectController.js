@@ -45,7 +45,6 @@ exports.createProject = (req, res, next) => {
                     res.status(200).json({
                 state: "Projet créé avec succès !"
                 })
-
             };
         }
     );

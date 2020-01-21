@@ -146,11 +146,11 @@ exports.showOneUser = (req, res, next) => {
 }
 
 exports.showAllUsers = (req, res, next) => {
-    User.find()
-        .select("username roles specialisation")
-        .then(users => {
+    User.find({ _id: req.body.userId })
+        .select("username specialisation")
+        .then(user => {
             return res.status(200).json({
-                users: users
+                user
             });
         })
         .catch(err => {
