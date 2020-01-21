@@ -16,9 +16,9 @@ exports.createProject = (req, res, next) => {
         _id: mongoose.Types.ObjectId(),
         title: req.body.title,
         description: req.body.description,
-        coders_join_confirmed: req.body.coders_join_confirmed,
-        coders_com_post: req.body.coders_com_post,
-        coders_can_create_task: req.body.coders_can_create_task
+        coders_join_confirmed: false,
+        coders_com_post: false,
+        coders_can_create_task: false
     });
 
     // User.findOne({ _id: req.body.id })
@@ -45,6 +45,11 @@ exports.createProject = (req, res, next) => {
 }
 
 exports.updateProject = (req, res, next) => {
+    Project.patch({ _id: req.params.projectId })
+
+    return res.status(200).json({
+        state: "Le projet a etait mise a jour !"
+    });
 
     const ops = {};
 
@@ -82,7 +87,7 @@ exports.deleteProject = (req, res, next) => {
 
 exports.showOneProject = (req, res, next) => {
     // JE CHERCHE LE USER PAR RAPPORT A L ID
-    Project.findOne({ _id: req.params.projectId })
+    Project.findOne({ _id: req.body.projectId })
         // JE LUI RENVOIE LE USER
         .then(project => {
             res.status(200).json({

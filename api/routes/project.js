@@ -9,7 +9,7 @@ const projectController = require("../controller/projectController");
 router.post("/create_project", projectController.createProject)
 
 // Update project
-router.post("/:projectId", projectController.updateProject)
+router.patch("/:projectId", projectController.updateProject)
 
 // Remove project
 router.delete("/delete_project", projectController.deleteProject)
