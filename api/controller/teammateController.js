@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const Teammate = require("../models/teammate");
+const User = require("../models/users");
 const JWT = require("jsonwebtoken");
 
 // SHOW MANAGER
@@ -17,17 +18,23 @@ exports.showTeammate = (req, res, next) => {
 }
 
 exports.showAllTeammateByProject = (req, res, next) => {
-        Teammate.find({ project_id: req.body.projectId })
-        .select("role user_id")
-        .then(teammate => {
-            return res.status(200).json({
-                teammate
-            })
+    Teammate.find({ project_id: req.body.projectId })
+        .select("role")
+        .populate("user_id", "username")
+        .then(teammates => {
+            res.status(200).json(
+                teammates.map(teammate => ({
+                    id: teammate._id,
+                    username: teammate.user_id.username,
+                    role: teammate.role
+                }))
+            );
         })
         .catch(err => {
             error500(err);
         })
 }
+
 
 // SWITCH ROLE TEAMMATE
 exports.switchRoleTeammate = (req, res, next) => {

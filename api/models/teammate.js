@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const teammateSchema = mongoose.Schema({
-    
     _id: mongoose.Schema.Types.ObjectId,
-    user_id: {type: mongoose.Types.ObjectId, require: true},
+    user_id: { type: mongoose.Types.ObjectId, require: true, ref: "User" },
     project_id: { type: mongoose.Types.ObjectId, require: true},
     task_id: { type: mongoose.Types.ObjectId, require: false},
     role: { type: String, require: false}
