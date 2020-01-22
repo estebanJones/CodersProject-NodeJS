@@ -1,15 +1,15 @@
-const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const Project = require("../models/project");
 const JWT = require("jsonwebtoken");
 const Teammate = require("../models/teammate");
 
 
-// function error500(resp, args) {
-//     return resp.status(500).json({
-//         state: "Une erreur est survenue :" + args
-//     })
-// }
+
+function error500(resp, args) {
+    return resp.status(500).json({
+        state: "Une erreur est survenue :" + args
+    })
+}
 
 exports.createProject = (req, res, next) => {
     const project = new Project({
@@ -43,16 +43,18 @@ exports.createProject = (req, res, next) => {
                 }
                 if (isValid) {
                     res.status(200).json({
-                state: "Projet créé avec succès !"
-                })
-            };
+                        state: "Projet créé avec succès !"
+                    })
+                };
+            }
+            );
         }
-    );
+    })
 }
-    })}
 
 exports.updateProject = (req, res, next) => {
     const updateOps = {};
+<<<<<<< HEAD
     
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
@@ -63,6 +65,20 @@ exports.updateProject = (req, res, next) => {
             console.log(result);
             res.status(200).json(result)
         })         .catch(err => {
+=======
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+
+    Project.updateOne({ _id: req.params.projectId },
+        { $set: updateOps })
+
+        .then(result => {
+            console.log(result);
+            res.status(200).json(result)
+        })
+        .catch(err => {
+>>>>>>> b30602b02dbc453dd831c1ee490457dd617b6cd3
             res.status(500).json({
                 error: err
             })
@@ -88,8 +104,10 @@ exports.showOneProject = (req, res, next) => {
     Project.findOne({ _id: req.body.projectId })
         // JE LUI RENVOIE LE USER
         .then(project => {
+            console.log(project);
             res.status(200).json({
-                project: project
+                project: project,
+
             })
         })
         .catch(err => {

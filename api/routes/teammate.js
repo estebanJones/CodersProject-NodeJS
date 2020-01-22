@@ -17,5 +17,7 @@ router.delete("/project/delete", checkAuth, teammateController.removeTeammate)
 // SHOW ALL
 router.post("/show_all", teammateController.showAllTeammateByProject)
 
+router.post("/project/allMembers", teammateController.getPseudoTeammateByProject)
+
 
 module.exports = router;
