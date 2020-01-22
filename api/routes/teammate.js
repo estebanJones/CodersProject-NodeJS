@@ -15,7 +15,7 @@ router.post("/project/switch/roles", checkAuth, teammateController.switchRoleTea
 router.delete("/project/delete", checkAuth, teammateController.removeTeammate)
 
 // SHOW ALL
-router.post("/project/show/all", teammateController.showAllTeammate)
+router.post("/show_all", teammateController.showAllTeammateByProject)
 
 router.post("/project/allMembers", teammateController.getPseudoTeammateByProject)
 

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Project = require("../models/project");
+const JWT = require("jsonwebtoken");
+const Teammate = require("../models/teammate");
 
 
 
@@ -19,14 +21,12 @@ exports.createProject = (req, res, next) => {
         coders_can_create_task: false
     });
 
-    //User.findOne({ _id: req.body.id })
     const teammate = new Teammate({
         _id: mongoose.Types.ObjectId(),
         user_id: req.body.user_id,
         project_id: project._id,
-        task_id: { type: mongoose.Types.ObjectId, require: false },
         role: "manager"
-    })
+    });
 
     return project.save((err, isValid) => {
         if (err) {
@@ -35,11 +35,21 @@ exports.createProject = (req, res, next) => {
             });
         }
         if (isValid) {
-            return res.status(200).json({
-                state: "Projet créé avec succès !"
-            });
+            return teammate.save((err, isValid) => {
+                if (err) {
+                    return res.status(500).json({
+                        state: "erreur"
+                    });
+                }
+                if (isValid) {
+                    res.status(200).json({
+                        state: "Projet créé avec succès !"
+                    })
+                };
+            }
+            );
         }
-    });
+    })
 }
 
 exports.updateProject = (req, res, next) => {
@@ -99,7 +109,7 @@ exports.showAllProject = (req, res, next) => {
         .select("title description")
         .then(projects => {
             return res.status(200).json({
-                liste: projects
+                projects: projects
             });
         })
         .catch(err => {

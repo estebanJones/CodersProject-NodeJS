@@ -24,36 +24,25 @@ exports.showTeammate = (req, res, next) => {
         })
 }
 
-exports.showAllTeammate = (req, res, next) => {
-    // JE ME CONNECTE A MA BDD MONGO
-    // MongoClient.connect(url, function (err, db) {
-    //     // SI ERREUR RENVOYER
-    //     if (err) throw err;
-    //     // SINON CONNEXION
-    //     var dbo = db.db("codersproject");
-    //     // FOUILLE DANS LA TABLE USER ET FETCH MOI LA TOTALITE
-    //     dbo.collection("Teammate").find({}).toArray(function (err, listeTeammate) {
-    //         if (err) {
-    //             return res.status(500).json({
-    //                 state: "Une erreur est survenue :" + err
-    //             })
-    //         }
-
-    //         res.status(200).json({
-    //             object: listeTeammate
-    //         })
-    //         db.close();
-    //     });
-    // });
-
-    Project.findOne({ _id: req.body.projectId })
-        .then(project => {
-            console.log(project)
+exports.showAllTeammateByProject = (req, res, next) => {
+    Teammate.find({ project_id: req.body.projectId })
+        .select("role")
+        .populate("user_id", "username")
+        .then(teammates => {
+            res.status(200).json(
+                teammates.map(teammate => ({
+                    id: teammate._id,
+                    username: teammate.user_id.username,
+                    role: teammate.role
+                }))
+            );
         })
-
-
-
+        .catch(err => {
+            error500(err);
+        })
 }
+
+
 // SWITCH ROLE TEAMMATE
 exports.switchRoleTeammate = (req, res, next) => {
     return res.status(200).json({
