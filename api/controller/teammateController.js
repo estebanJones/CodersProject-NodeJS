@@ -26,7 +26,8 @@ exports.showAllTeammateByProject = (req, res, next) => {
                 teammates.map(teammate => ({
                     id: teammate._id,
                     username: teammate.user_id.username,
-                    role: teammate.role
+                    role: teammate.role,
+                    user_id: teammate.user_id._id
                 }))
             );
         })

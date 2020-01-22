@@ -52,30 +52,21 @@ exports.createProject = (req, res, next) => {
     })}
 
 exports.updateProject = (req, res, next) => {
-    Project.patch({ _id: req.params.projectId })
-
-    return res.status(200).json({
-        state: "Le projet a etait mise a jour !"
-    });
-
-    const ops = {};
-
-    for (const op of req.body) {
-        ops[op.propName] = op.value;
-        console.log(ops[op.propName]);
+    const updateOps = {};
+    
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
     }
-
-    Project.post({ _id: req.params.projectId }, { $set: ops })
+    Project.updateOne({ _id: req.params.projectId },
+        { $set: updateOps })
         .then(result => {
-            return res.status(200).json({
-                state: "Projet mis à jour"
-            });
+            console.log(result);
+            res.status(200).json(result)
+        })         .catch(err => {
+            res.status(500).json({
+                error: err
+            })
         })
-        .then(err => {
-            return res.status(500).json({
-                state: err
-            });
-        });
 }
 
 
