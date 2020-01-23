@@ -85,15 +85,9 @@ exports.acceptCandidat = (req, res, next) => {
                             error500(res, err);
                         }
                         if (isValid) {
-                            return Candidat.remove({ _id: req.body.candidatId })
-                                .then(success => {
-                                    return res.status(200).json({
-                                        state: "Le candidat à bien été supprimé !" + success
-                                    })
-                                })
-                                .catch(err => {
-                                    error500(res, err);
-                                })
+                            res.status(200).json({
+                                state: "Le candidat à bien été supprimé !"
+                            })
                         }
                     });
                 })
