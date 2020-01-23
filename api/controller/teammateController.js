@@ -39,7 +39,7 @@ exports.showAllTeammateByProject = (req, res, next) => {
             );
         })
         .catch(err => {
-            error500(err);
+            error500(res, err);
         })
 }
 

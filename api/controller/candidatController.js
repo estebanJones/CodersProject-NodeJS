@@ -16,10 +16,10 @@ function error500(resp, args) {
 exports.newCandidat = (req, res, next) => {
     // JE RECUPERE L ID USER
     User.findOne({ _id: req.body.userId })
-    // CANDIDAT TROUVE
+        // CANDIDAT TROUVE
         .then(candidat => {
             // JE RECUPERE L ID PROJET
-            Project.findOne({_id: req.body.projectId})
+            Project.findOne({ _id: req.body.projectId })
                 .then(projet => {
                     console.log(projet._id)
 
@@ -33,7 +33,7 @@ exports.newCandidat = (req, res, next) => {
                     });
 
                     return newCandidat.save((err, isValid) => {
-                        if(err) {
+                        if (err) {
                             error500(res, err);
                         }
                         if (isValid) {
@@ -44,7 +44,7 @@ exports.newCandidat = (req, res, next) => {
                     });
                 })
                 .catch(err => {
-                   error500(res, err);
+                    error500(res, err);
                 })
         })
         .catch(err => {
@@ -53,25 +53,25 @@ exports.newCandidat = (req, res, next) => {
 }
 
 exports.removeCandidat = (req, res, next) => {
-    Candidat.remove({user_id: req.body.userId})
-        .then(sucess => {
+    Candidat.remove({ _id: req.body.candidatId })
+        .then(success => {
             return res.status(200).json({
-                state: "Le candidat à bien été supprimé !"
+                state: "Le candidat à bien été supprimé !" + success
             })
         })
         .catch(err => {
             error500(res, err);
         })
-    
+
 
 }
 
 exports.acceptCandidat = (req, res, next) => {
     // JE RECUPERE LE CANDIDAT ID 
-    Candidat.findOne({user_id: req.body.userId})
+    Candidat.findOne({ user_id: req.body.userId })
         .then(candidat => {
             // JE RECUPERE LE PROJET ID
-            Project.findOne({_id: req.body.projectId})
+            Project.findOne({ _id: req.body.projectId })
                 .then(projet => {
                     const teammate = new Teammate({
                         _id: mongoose.Types.ObjectId(),
@@ -84,7 +84,7 @@ exports.acceptCandidat = (req, res, next) => {
                             error500(res, err);
                         }
                         if (isValid) {
-                            Candidat.remove({user_id: req.body.userId})
+                            Candidat.remove({ user_id: req.body.userId })
                                 .then(result => {
                                     return res.status(200).json({
                                         state: "Candidat accepté !"
@@ -99,25 +99,25 @@ exports.acceptCandidat = (req, res, next) => {
                 .catch(err => {
                     error500(res, err);
                 })
-        .catch(err => {
-            error500(res, err);
+                .catch(err => {
+                    error500(res, err);
+                })
         })
-    })
 }
 
 exports.showAllCandidats = (req, res, next) => {
-    Candidat.find({project_id: req.body.projectId})
+    console.log("saluuuut");
+    Candidat.find({ project_id: req.body.projectId })
+        .select("message")
+        .populate("user_id", "username")
         .then(candidats => {
-            console.log(candidats.length);
-            if (candidats.length <= 0) {
-                return res.status(405).json({
-                    state: "Vous n'avez aucun candidat"
-                });
-            }
-
-            return res.status(200).json({
-                listCandidats: candidats
-            });
+            res.status(200).json(
+                candidats.map(candidat => ({
+                    id: candidat._id,
+                    username: candidat.user_id.username,
+                    message: candidat.message
+                }))
+            );
         })
         .catch(err => {
             error500(res, err);
@@ -125,7 +125,7 @@ exports.showAllCandidats = (req, res, next) => {
 }
 
 exports.showOneCandidat = (req, res, next) => {
-    Candidat.find({user_id: req.body.userId})
+    Candidat.find({ user_id: req.body.userId })
         .then(candidat => {
             return res.status(200).json({
                 candidat: candidat

@@ -54,7 +54,6 @@ exports.createProject = (req, res, next) => {
 
 exports.updateProject = (req, res, next) => {
     const updateOps = {};
-<<<<<<< HEAD
     
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
@@ -65,20 +64,6 @@ exports.updateProject = (req, res, next) => {
             console.log(result);
             res.status(200).json(result)
         })         .catch(err => {
-=======
-    for (const ops of req.body) {
-        updateOps[ops.propName] = ops.value;
-    }
-
-    Project.updateOne({ _id: req.params.projectId },
-        { $set: updateOps })
-
-        .then(result => {
-            console.log(result);
-            res.status(200).json(result)
-        })
-        .catch(err => {
->>>>>>> b30602b02dbc453dd831c1ee490457dd617b6cd3
             res.status(500).json({
                 error: err
             })
