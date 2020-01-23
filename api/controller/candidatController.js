@@ -76,7 +76,8 @@ exports.acceptCandidat = (req, res, next) => {
                     const teammate = new Teammate({
                         _id: mongoose.Types.ObjectId(),
                         user_id: req.body.userId,
-                        project_id: projet.id
+                        project_id: projet.id,
+                        role: "Développeur"
                     });
 
                     return teammate.save((err, isValid) => {
@@ -84,11 +85,11 @@ exports.acceptCandidat = (req, res, next) => {
                             error500(res, err);
                         }
                         if (isValid) {
-                            Candidat.remove({ user_id: req.body.userId })
-                                .then(result => {
+                            return Candidat.remove({ _id: req.body.candidatId })
+                                .then(success => {
                                     return res.status(200).json({
-                                        state: "Candidat accepté !"
-                                    });
+                                        state: "Le candidat à bien été supprimé !" + success
+                                    })
                                 })
                                 .catch(err => {
                                     error500(res, err);
@@ -115,6 +116,7 @@ exports.showAllCandidats = (req, res, next) => {
                 candidats.map(candidat => ({
                     id: candidat._id,
                     username: candidat.user_id.username,
+                    user_id: candidat.user_id._id,
                     message: candidat.message
                 }))
             );
