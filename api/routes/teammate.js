@@ -12,7 +12,7 @@ router.post("/project/show/manager", checkAuth, teammateController.showTeammate)
 router.post("/project/switch/roles", checkAuth, teammateController.switchRoleTeammate)
 
 // Remove user
-router.delete("/project/delete", checkAuth, teammateController.removeTeammate)
+router.delete("/project/delete", teammateController.removeTeammate)
 
 // SHOW ALL
 router.post("/show_all", teammateController.showAllTeammateByProject)
