@@ -93,7 +93,7 @@ exports.createUser = (req, res, next) => {
                 }
                 if (isValid) {
                     return res.status(200).json({
-                        state: "Inscription réussi !"
+                        state: "success"
                     });
                 }
 

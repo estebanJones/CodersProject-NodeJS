@@ -54,7 +54,6 @@ exports.createProject = (req, res, next) => {
 
 exports.updateProject = (req, res, next) => {
     const updateOps = {};
-    
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
     }
