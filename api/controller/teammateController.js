@@ -54,7 +54,7 @@ exports.switchRoleTeammate = (req, res, next) => {
 
 // REMOVE TEAMMATE
 exports.removeTeammate = (req, res, next) => {
-    Teammate.remove({ user_id: req.params.userId })
+    Teammate.remove({ _id: req.body.teammateId })
         .then(result => json.status(200).json({
             state: "Teammate supprimé avec succès"
         }))
