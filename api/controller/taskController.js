@@ -14,10 +14,9 @@ exports.createTask = (req, res, next) => {
     const task = new Task({
         _id: mongoose.Types.ObjectId(),
         title: req.body.title,
-        content: req.body.content,
         task_importance: req.body.taskImportance,
-        project_id: req.params.projectId,
-        teammate_id: req.params.teammateId
+        project_id: req.body.projectId,
+        indexColumn: req.body.indexColumn
     })
     return task.save((err, isValid) => {
         if (err) {
@@ -25,7 +24,7 @@ exports.createTask = (req, res, next) => {
         }
         if (isValid) {
             return res.status(200).json({
-                state: "Inscription réussi !"
+                state: "Tache ajouté avec succès !"
             });
         }
     })
@@ -33,31 +32,36 @@ exports.createTask = (req, res, next) => {
 }
 
 exports.updateTask = (req, res, next) => {
-    Task.remove({_id: req.params.id})
+    console.log(eq.body.taskId.taskId.id);
+
+    const updateOps = {};
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+
+    Task.updateOne({ _id: req.body.taskId.taskId.id },
+        { $set: updateOps })
         .then(result => {
-            return res.status(200).json({
-                state: "Tache supprimé"
+            console.log(result);
+            res.status(200).json(result)
+        }).catch(err => {
+            res.status(500).json({
+                error: err
             })
         })
-        .catch(err => {
-            error500(res, err);
-        })
-
-
 }
 
 exports.deleteTask = (req, res, next) => {
-    Task.remove({_id: req.params.id})
+    Task.remove({ _id: req.params.id })
         .then(result => {
             return res.status(200).json({
                 state: "Tache supprimé"
             })
         })
-
 }
 
 exports.showOneTask = (req, res, next) => {
-    Task.find({_id: req.params.taskId})
+    Task.find({ _id: req.params.taskId })
         .then(task => {
             return res.status(200).json({
                 task: task
