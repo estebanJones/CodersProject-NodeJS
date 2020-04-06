@@ -33,6 +33,7 @@ exports.login = (req, res, next) => {
                 if (isValid) {
                     return res.status(200).json({
                         state: "Connexion successfull",
+                        user: user,
                         token: JWT.sign(
                             {
                                 userId: user._id,
@@ -92,7 +93,7 @@ exports.createUser = (req, res, next) => {
                 }
                 if (isValid) {
                     return res.status(200).json({
-                        state: "Inscription réussi !"
+                        state: "success"
                     });
                 }
 
@@ -145,11 +146,11 @@ exports.showOneUser = (req, res, next) => {
 }
 
 exports.showAllUsers = (req, res, next) => {
-    User.find()
-        .select("username roles specialisation")
-        .then(users => {
+    User.find({ _id: req.body.userId })
+        .select("username specialisation")
+        .then(user => {
             return res.status(200).json({
-                users: users
+                user
             });
         })
         .catch(err => {

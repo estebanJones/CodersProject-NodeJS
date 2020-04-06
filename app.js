@@ -14,7 +14,7 @@ mongoose.connect("mongodb+srv://admin:" + process.env.MONGO_ATLAS_PW + "@codersp
         useCreateIndex: true
     })
     .then(() => console.log("Connection to MongoDB successfull"))
-    .catch((err) => console.log("Connection to MongoDB failed", err));
+    .catch(() => console.log("Connection to MongoDB failed"));
 
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
