@@ -7,6 +7,10 @@ const app = require('./app');
 const serveur = http.createServer(app);
 // Ecoute du serveur sur le port 8000
 serveur.listen(7000);
+
+
+
+
 // const http = require('http');
 
 // http.createServer(function (req, res) {
